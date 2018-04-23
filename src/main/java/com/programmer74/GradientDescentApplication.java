@@ -20,13 +20,7 @@ public class GradientDescentApplication {
 
     private static final int triesCount = 3;
     private static final int samplesCount = 100;
-
-    public static void main(String[] args) {
-        List<Pair<Double>> data = DummyDataLoader.loadBigDummyData(new LinearHypothesis(), samplesCount, 0.001);
-        GradientDescentCalculator calculator = new BasicGradientDescentCalculator(data, new LinearHypothesis());
-
-        System.out.println("Benchmarking Basic GradientDescent");
-
+    public static double benchmark(GradientDescentCalculator calculator) {
         double avgTime = 0;
         for (int i = 0; i < triesCount; i++) {
             long startTime = System.currentTimeMillis();
@@ -40,9 +34,19 @@ public class GradientDescentApplication {
             avgTime += totalTime;
         }
         avgTime = avgTime / triesCount;
-        System.out.println("Calculations done in " + avgTime + " ms.");
+        return avgTime;
+    }
 
-        System.out.println("Testing Spark...");
+
+    public static void main(String[] args) {
+        List<Pair<Double>> data = DummyDataLoader.loadBigDummyData(new LinearHypothesis(), samplesCount, 0.001);
+        GradientDescentCalculator calculator = new BasicGradientDescentCalculator(data, new LinearHypothesis());
+
+        System.out.println("Benchmarking Basic GradientDescent");
+        double avgTime = benchmark(calculator);
+        System.out.println("Basic Gradient Descent required " + avgTime + "ms to calculate.");
+
+        System.out.println("Firing up Spark...");
 
         Logger.getLogger("org").setLevel(Level.WARN);
         Logger.getLogger("akka").setLevel(Level.WARN);
@@ -60,7 +64,8 @@ public class GradientDescentApplication {
 
         calculator = new SparkGradientDescentCalculator(sc, sc.parallelize(data), new LinearHypothesis());
 
-        Pair<Double> finalTheta = calculator.calculate(0.1, 0.1);
-        System.out.printf("theta0 = %f, theta1 = %f\n", finalTheta.getFirst(), finalTheta.getSecond());
+        System.out.println("Benchmarking Spark GradientDescent");
+        avgTime = benchmark(calculator);
+        System.out.println("Spark Gradient Descent required " + avgTime + "ms to calculate.");
     }
 }
