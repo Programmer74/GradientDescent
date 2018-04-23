@@ -5,12 +5,17 @@ import com.programmer74.GradientDescent.LinearHypothesis;
 import com.programmer74.util.DummyDataLoader;
 import com.programmer74.util.Pair;
 
+import java.util.Arrays;
 import java.util.List;
+
+import org.apache.spark.api.java.JavaSparkContext;
+import org.apache.spark.api.java.JavaRDD;
+import org.apache.spark.SparkConf;
 
 public class GradientDescentApplication {
 
     private static final int triesCount = 3;
-    private static final int samplesCount = 100000;
+    private static final int samplesCount = 100;
 
     public static void main(String[] args) {
         List<Pair<Double>> data = DummyDataLoader.loadBigDummyData(new LinearHypothesis(), samplesCount, 0.001);
@@ -66,5 +71,18 @@ public class GradientDescentApplication {
         }
         avgTime = avgTime / triesCount;
         System.out.println("Calculations done in " + avgTime + " ms.");
+
+        System.out.println("Testing Spark...");
+
+        SparkConf conf = new SparkConf().setAppName("GradientDescentApplication")
+                .setMaster("local[2]")
+                .set("spark.driver.host", "localhost");
+        JavaSparkContext sc = new JavaSparkContext(conf);
+
+        List<Integer> dummydata = Arrays.asList(1, 2, 3, 4, 5);
+        JavaRDD<Integer> distData = sc.parallelize(dummydata);
+        int sum = distData.reduce((a, b) -> (a + b));
+
+        System.out.println("Spark says that the sum of " + dummydata + " is " + sum);
     }
 }
