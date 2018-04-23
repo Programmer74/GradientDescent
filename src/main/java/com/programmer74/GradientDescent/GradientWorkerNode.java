@@ -65,6 +65,7 @@ public class GradientWorkerNode implements Runnable {
                 answer = GradientDescentCalculator.calculateGradientOfThetaN(data, theta0, theta1, hypothesis, factor);
                 hasCalculated = true;
                 shouldCalculate = false;
+                Thread.yield();
             }
         }
     }

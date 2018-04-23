@@ -111,9 +111,11 @@ public class GradientDescentCalculator {
             boolean notCalculatedYet = true;
             while (notCalculatedYet) {
                 notCalculatedYet = false;
-                for (int j = 0; j < maxThreadCount; j++) {
+                //Counting from bottom to top since the last worker may have slightly bigger data slice
+                for (int j = maxThreadCount - 1; j >= 0; j--) {
                     if (!nodesTheta0.get(j).hasCalculated() || !nodesTheta1.get(j).hasCalculated()) {
                         notCalculatedYet = true;
+                        Thread.yield();
                         break;
                     }
                 }
