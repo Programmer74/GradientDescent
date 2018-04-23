@@ -1,5 +1,6 @@
 package com.programmer74.GradientDescent;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.DoubleBinaryOperator;
@@ -43,11 +44,11 @@ public class GradientDescentCalculator {
             oldTheta0 = theta0;
             oldTheta1 = theta1;
 
-            double sum0 = calculateGradientOfThetaN(data, theta0, theta1, hypothesis, x -> 1);
-            double sum1 = calculateGradientOfThetaN(data, theta0, theta1, hypothesis, x -> x);
+            BigDecimal sum0 = calculateGradientOfThetaN(data, theta0, theta1, hypothesis, x -> 1);
+            BigDecimal sum1 = calculateGradientOfThetaN(data, theta0, theta1, hypothesis, x -> x);
 
-            theta0 = theta0 - (alpha * (1.0 / data.size()) * sum0);
-            theta1 = theta1 - (alpha * (1.0 / data.size()) * sum1);
+            theta0 = theta0 - sum0.multiply(new BigDecimal(alpha * (1.0 / data.size()))).doubleValue();
+            theta1 = theta1 - sum1.multiply(new BigDecimal(alpha * (1.0 / data.size()))).doubleValue();
         }
         return new Pair<>(theta0, theta1);
     }
@@ -121,14 +122,14 @@ public class GradientDescentCalculator {
                 }
             }
 
-            double sum0 = 0, sum1 = 0;
+            BigDecimal sum0 = new BigDecimal(0), sum1 = new BigDecimal(0);
             for (int j = 0; j < maxThreadCount; j++) {
-                sum0 += nodesTheta0.get(j).getAnswer();
-                sum1 += nodesTheta1.get(j).getAnswer();
+                sum0.add(nodesTheta0.get(j).getAnswer());
+                sum1.add(nodesTheta1.get(j).getAnswer());
             }
 
-            theta0 = theta0 - (alpha * (1.0 / data.size()) * sum0);
-            theta1 = theta1 - (alpha * (1.0 / data.size()) * sum1);
+            theta0 = theta0 - sum0.multiply(new BigDecimal(alpha * (1.0 / data.size()))).doubleValue();
+            theta1 = theta1 - sum1.multiply(new BigDecimal(alpha * (1.0 / data.size()))).doubleValue();
         }
 
         //Stopping those threads since we won't need them anymore
@@ -148,19 +149,19 @@ public class GradientDescentCalculator {
         return new Pair<>(theta0, theta1);
     }
 
-    protected static double calculateGradientOfThetaN(List<Pair<Double>> data, double theta0, double theta1,
+    protected static BigDecimal calculateGradientOfThetaN(List<Pair<Double>> data, double theta0, double theta1,
                                              Hypothesis hypothesis, DoubleUnaryOperator factor) {
         return calculateSigma(data, (x, y) ->  (
                 hypothesis.calculateHypothesis(x, theta0, theta1) - y) * factor.applyAsDouble(x)
         );
     }
 
-    protected static double calculateSigma(List<Pair<Double>> data, DoubleBinaryOperator inner) {
-        return data.stream()
-                .mapToDouble(theta -> {
-                    double x = theta.getFirst(), y = theta.getSecond();
-                    return inner.applyAsDouble(x, y);
-                })
-                .sum();
+    protected static BigDecimal calculateSigma(List<Pair<Double>> data, DoubleBinaryOperator inner) {
+        BigDecimal res = new BigDecimal(0);
+        for (Pair<Double> entry : data) {
+            double x = entry.getFirst(), y = entry.getSecond();
+            res = res.add(new BigDecimal(inner.applyAsDouble(x, y)));
+        }
+        return res;
     }
 }

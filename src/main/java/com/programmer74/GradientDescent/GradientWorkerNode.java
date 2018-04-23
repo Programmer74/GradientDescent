@@ -2,6 +2,7 @@ package com.programmer74.GradientDescent;
 
 import com.programmer74.util.Pair;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.function.DoubleUnaryOperator;
 
@@ -10,7 +11,7 @@ public class GradientWorkerNode implements Runnable {
     private Boolean hasCalculated;
     private boolean shouldCalculate;
     private boolean shouldStop;
-    private double answer;
+    private BigDecimal answer;
     private Hypothesis hypothesis;
     private List<Pair<Double>> data;
     private double theta0;
@@ -23,7 +24,7 @@ public class GradientWorkerNode implements Runnable {
         this.factor = factor;
         theta0 = 0;
         theta1 = 0;
-        answer = 0;
+        answer = new BigDecimal(0);
         hasCalculated = false;
         shouldCalculate = false;
         shouldStop = false;
@@ -49,7 +50,7 @@ public class GradientWorkerNode implements Runnable {
         return hasCalculated;
     }
 
-    public double getAnswer() {
+    public BigDecimal getAnswer() {
         return answer;
     }
 
