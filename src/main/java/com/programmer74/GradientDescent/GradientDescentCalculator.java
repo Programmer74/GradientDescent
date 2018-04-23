@@ -41,15 +41,15 @@ public class GradientDescentCalculator {
             oldTheta0 = theta0;
             oldTheta1 = theta1;
 
-            theta0 = theta0 - (alpha * calculateGradientOfThetaN(data, theta0, theta1, hypothesis, x -> 1));
-            theta1 = theta1 - (alpha * calculateGradientOfThetaN(data, theta0, theta1, hypothesis, x -> x));
+            theta0 = theta0 - (alpha * (1.0 / data.size()) * calculateGradientOfThetaN(data, theta0, theta1, hypothesis, x -> 1));
+            theta1 = theta1 - (alpha * (1.0 / data.size()) * calculateGradientOfThetaN(data, theta0, theta1, hypothesis, x -> x));
         }
         return new Pair<>(theta0, theta1);
     }
 
     private double calculateGradientOfThetaN(List<Pair<Double>> data, double theta0, double theta1,
                                              Hypothesis hypothesis, DoubleUnaryOperator factor) {
-        return (1.0 / data.size()) * calculateSigma(data, (x, y) ->  (
+        return calculateSigma(data, (x, y) ->  (
                 hypothesis.calculateHypothesis(x, theta0, theta1) - y) * factor.applyAsDouble(x)
         );
     }
