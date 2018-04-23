@@ -1,6 +1,8 @@
 package com.programmer74;
 
+import com.programmer74.GradientDescent.BasicGradientDescentCalculator;
 import com.programmer74.GradientDescent.GradientDescentCalculator;
+import com.programmer74.GradientDescent.SparkGradientDescentCalculator;
 import com.programmer74.GradientDescent.LinearHypothesis;
 import com.programmer74.util.DummyDataLoader;
 import com.programmer74.util.Pair;
@@ -21,15 +23,15 @@ public class GradientDescentApplication {
 
     public static void main(String[] args) {
         List<Pair<Double>> data = DummyDataLoader.loadBigDummyData(new LinearHypothesis(), samplesCount, 0.001);
-        GradientDescentCalculator calculator = new GradientDescentCalculator(new LinearHypothesis());
+        GradientDescentCalculator calculator = new BasicGradientDescentCalculator(data, new LinearHypothesis());
 
-        System.out.println("Benchmarking simple GradientDescent");
+        System.out.println("Benchmarking Basic GradientDescent");
 
         double avgTime = 0;
         for (int i = 0; i < triesCount; i++) {
             long startTime = System.currentTimeMillis();
 
-            Pair<Double> finalTheta = calculator.doSingleVarGradientDescent(data, 0.1, 0.1);
+            Pair<Double> finalTheta = calculator.calculate(0.1, 0.1);
             System.out.printf("theta0 = %f, theta1 = %f\n", finalTheta.getFirst(), finalTheta.getSecond());
 
             long endTime   = System.currentTimeMillis();
@@ -41,7 +43,6 @@ public class GradientDescentApplication {
         System.out.println("Calculations done in " + avgTime + " ms.");
 
         System.out.println("Testing Spark...");
-
 
         Logger.getLogger("org").setLevel(Level.WARN);
         Logger.getLogger("akka").setLevel(Level.WARN);
@@ -57,7 +58,9 @@ public class GradientDescentApplication {
 
         System.out.println("Spark says that the sum of " + dummydata + " is " + sum);
 
-        Pair<Double> finalTheta = calculator.doSingleVarGradientDescentSpark(sc, data, 0.1, 0.1);
+        calculator = new SparkGradientDescentCalculator(sc, sc.parallelize(data), new LinearHypothesis());
+
+        Pair<Double> finalTheta = calculator.calculate(0.1, 0.1);
         System.out.printf("theta0 = %f, theta1 = %f\n", finalTheta.getFirst(), finalTheta.getSecond());
     }
 }
