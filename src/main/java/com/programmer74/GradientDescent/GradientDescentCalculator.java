@@ -12,7 +12,7 @@ public class GradientDescentCalculator {
     private double alpha;
     private int maxIterations;
     private Hypothesis hypothesis;
-    private static final double epsilon = Double.MIN_VALUE;
+    private static final double epsilon = 0.0001;
 
     public GradientDescentCalculator(Hypothesis hypothesis) {
         this.alpha = 0.01;
