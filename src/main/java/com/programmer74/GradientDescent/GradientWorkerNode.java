@@ -27,7 +27,6 @@ public class GradientWorkerNode implements Runnable {
         hasCalculated = false;
         shouldCalculate = false;
         shouldStop = false;
-        System.out.println(data);
     }
 
     public void setThetas(double theta0, double theta1) {
