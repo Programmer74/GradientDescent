@@ -1,6 +1,8 @@
 package com.programmer74.util;
 
-public class Pair<T> {
+import java.io.Serializable;
+
+public class Pair<T> implements Serializable {
     private T first;
     private T second;
 

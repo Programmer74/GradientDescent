@@ -84,5 +84,8 @@ public class GradientDescentApplication {
         int sum = distData.reduce((a, b) -> (a + b));
 
         System.out.println("Spark says that the sum of " + dummydata + " is " + sum);
+
+        Pair<Double> finalTheta = calculator.doSingleVarGradientDescentSpark(sc, data, 0.1, 0.1);
+        System.out.printf("theta0 = %f, theta1 = %f\n", finalTheta.getFirst(), finalTheta.getSecond());
     }
 }
