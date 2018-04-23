@@ -13,7 +13,8 @@ public class GradientDescentApplication {
         List<Pair<Double>> data = DummyDataLoader.loadDummyData();
         GradientDescentCalculator calculator = new GradientDescentCalculator(new LinearHypothesis());
 
-        Pair<Double> finalTheta = calculator.doSingleVarGradientDescent(data, 0.1, 0.1);
+        Pair<Double> finalTheta = calculator.doSingleVarGradientDescentMultithreaded(data, 0.1, 0.1, 3);
+        //Pair<Double> finalTheta = calculator.doSingleVarGradientDescent(data, 0.1, 0.1);
         System.out.printf("theta0 = %f, theta1 = %f\n", finalTheta.getFirst(), finalTheta.getSecond());
     }
 }
