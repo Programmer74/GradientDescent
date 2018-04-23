@@ -8,6 +8,8 @@ import com.programmer74.util.Pair;
 import java.util.Arrays;
 import java.util.List;
 
+import org.apache.log4j.Level;
+import org.apache.log4j.Logger;
 import org.apache.spark.api.java.JavaSparkContext;
 import org.apache.spark.api.java.JavaRDD;
 import org.apache.spark.SparkConf;
@@ -73,6 +75,10 @@ public class GradientDescentApplication {
         System.out.println("Calculations done in " + avgTime + " ms.");
 
         System.out.println("Testing Spark...");
+
+
+        Logger.getLogger("org").setLevel(Level.WARN);
+        Logger.getLogger("akka").setLevel(Level.WARN);
 
         SparkConf conf = new SparkConf().setAppName("GradientDescentApplication")
                 .setMaster("local[2]")
