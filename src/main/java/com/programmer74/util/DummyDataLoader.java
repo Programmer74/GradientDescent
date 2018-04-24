@@ -26,17 +26,22 @@ public class DummyDataLoader {
         return data;
     }
 
-    public static List<Pair<Double>> loadBigDummyData(Hypothesis hypothesis, int samplesCount, double marginOfError) {
+    public static List<Pair<Double>> loadBigDummyDataWithThetas(Hypothesis hypothesis, int samplesCount,
+                                                                double marginOfError, double theta0, double theta1) {
         List<Pair<Double>> data = new ArrayList<>();
         Random r = new Random();
 
         for (int i = 0; i < samplesCount; i++) {
             double x = i * 10.0 / samplesCount;
-            double y = hypothesis.calculateHypothesis(x, 2, 1);
+            double y = hypothesis.calculateHypothesis(x, theta0, theta1);
             y += r.nextGaussian() * marginOfError;
             data.add(new Pair<>(x, y));
         }
         return data;
+    }
+
+    public static List<Pair<Double>> loadBigDummyData(Hypothesis hypothesis, int samplesCount, double marginOfError) {
+       return loadBigDummyDataWithThetas(hypothesis, samplesCount, marginOfError, 2, 1);
     }
 
     public static List<Pair<Double>> importCSV(String filename) {
