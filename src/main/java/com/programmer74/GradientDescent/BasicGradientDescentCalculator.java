@@ -12,18 +12,20 @@ public class BasicGradientDescentCalculator implements GradientDescentCalculator
     private int maxIterations;
     private Hypothesis hypothesis;
     private List<Pair<Double>> data;
-    private static final double epsilon = 0.0001;
+    private double epsilon;
 
     public BasicGradientDescentCalculator(List<Pair<Double>> data, Hypothesis hypothesis) {
         this.data = data;
         this.alpha = 0.01;
         this.maxIterations = 10_000;
+        this.epsilon = 0.0001;
         this.hypothesis = hypothesis;
     }
 
-    public BasicGradientDescentCalculator(List<Pair<Double>> data, Hypothesis hypothesis, double alpha, int maxIterations) {
+    public BasicGradientDescentCalculator(List<Pair<Double>> data, Hypothesis hypothesis, double alpha, int maxIterations, double epsilon) {
         this.data = data;
         this.alpha = alpha;
+        this.epsilon = epsilon;
         this.maxIterations = maxIterations;
         this.hypothesis = hypothesis;
     }

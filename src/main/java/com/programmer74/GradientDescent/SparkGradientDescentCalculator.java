@@ -9,7 +9,7 @@ public class SparkGradientDescentCalculator implements GradientDescentCalculator
     private double alpha;
     private int maxIterations;
     private Hypothesis hypothesis;
-    private static final double epsilon = 0.0001;
+    private double epsilon = 0.0001;
     private JavaSparkContext sc;
     private JavaRDD<Pair<Double>> pdata;
 
@@ -17,14 +17,16 @@ public class SparkGradientDescentCalculator implements GradientDescentCalculator
         this.sc = sc;
         this.pdata = pdata;
         this.alpha = 0.01;
+        this.epsilon = 0.0001;
         this.maxIterations = 10_000;
         this.hypothesis = hypothesis;
     }
 
-    public SparkGradientDescentCalculator(JavaSparkContext sc, JavaRDD<Pair<Double>> pdata, Hypothesis hypothesis, double alpha, int maxIterations) {
+    public SparkGradientDescentCalculator(JavaSparkContext sc, JavaRDD<Pair<Double>> pdata, Hypothesis hypothesis, double alpha, int maxIterations, double epsilon) {
         this.sc = sc;
         this.pdata = pdata;
         this.alpha = alpha;
+        this.epsilon = epsilon;
         this.maxIterations = maxIterations;
         this.hypothesis = hypothesis;
     }
