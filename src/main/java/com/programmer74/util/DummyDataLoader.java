@@ -24,7 +24,7 @@ public class DummyDataLoader {
         Random r = new Random();
 
         for (int i = 0; i < samplesCount; i++) {
-            double x = i * 10.0 / samplesCount;
+            double x = i * 10.0; /// samplesCount;
             double y = hypothesis.calculateHypothesis(x, 2, 1);
             y += r.nextGaussian() * marginOfError;
             data.add(new Pair<>(x, y));

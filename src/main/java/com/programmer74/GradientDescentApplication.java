@@ -16,7 +16,7 @@ import org.apache.spark.SparkConf;
 public class GradientDescentApplication {
 
     private static final int triesCount = 3;
-    private static final int samplesCount = 100;
+    private static final int samplesCount = 3;
     public static double benchmark(GradientDescentCalculator calculator) {
         double avgTime = 0;
         for (int i = 0; i < triesCount; i++) {
@@ -49,7 +49,7 @@ public class GradientDescentApplication {
         avgTime = benchmark(calculator);
         System.out.println("BigDecimal Gradient Descent required " + avgTime + "ms to calculate.");
 
-        /*System.out.println("Firing up Spark...");
+        System.out.println("Firing up Spark...");
 
         Logger.getLogger("org").setLevel(Level.WARN);
         Logger.getLogger("akka").setLevel(Level.WARN);
@@ -69,6 +69,6 @@ public class GradientDescentApplication {
 
         System.out.println("Benchmarking Spark GradientDescent");
         avgTime = benchmark(calculator);
-        System.out.println("Spark Gradient Descent required " + avgTime + "ms to calculate.");*/
+        System.out.println("Spark Gradient Descent required " + avgTime + "ms to calculate.");
     }
 }
