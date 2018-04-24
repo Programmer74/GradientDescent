@@ -1,7 +1,14 @@
 package com.programmer74.util;
 
 import com.programmer74.GradientDescent.Hypothesis;
+import org.apache.spark.api.java.JavaRDD;
+import org.apache.spark.api.java.JavaSparkContext;
+import org.apache.spark.api.java.function.Function;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -29,6 +36,37 @@ public class DummyDataLoader {
             y += r.nextGaussian() * marginOfError;
             data.add(new Pair<>(x, y));
         }
+        return data;
+    }
+
+    public static List<Pair<Double>> importCSV(String filename) {
+        List<String> lines = new ArrayList<>();
+        try {
+            Path path = Paths.get(filename);
+            lines = Files.readAllLines(path);
+        } catch (IOException ioex) {
+            //should never get here
+            ioex.printStackTrace();
+            System.exit(-1);
+        }
+        List<Pair<Double>> data = new ArrayList<>();
+        for (String line : lines) {
+            String[] fields = line.split(",");
+            Pair<Double> pair = new Pair<>(Double.valueOf(fields[0]), Double.valueOf(fields[1]));
+            data.add(pair);
+        }
+        return data;
+    }
+
+    public static JavaRDD<Pair<Double>> importCSV(JavaSparkContext sc, String filename) {
+        JavaRDD<String> textData = sc.textFile(filename);
+
+        JavaRDD<Pair<Double>> data = textData.map(
+                (Function<String, Pair<Double>>) line -> {
+                    String[] fields = line.split(",");
+                    Pair<Double> pair = new Pair<>(Double.valueOf(fields[0]), Double.valueOf(fields[1]));
+                    return pair;
+                });
         return data;
     }
 }

@@ -39,7 +39,9 @@ public class GradientDescentApplication {
 
 
     public static void main(String[] args) {
-        List<Pair<Double>> data = DummyDataLoader.loadBigDummyData(new LinearHypothesis(), samplesCount, 0.001);
+        //List<Pair<Double>> data = DummyDataLoader.loadBigDummyData(new LinearHypothesis(), samplesCount, 0.001);
+        List<Pair<Double>> data = DummyDataLoader.importCSV("test.csv");
+        System.out.println("Input dataset size: " + data.size());
         GradientDescentCalculator calculator = new BasicGradientDescentCalculator(data, new LinearHypothesis());
 
         System.out.println("Benchmarking Basic GradientDescent");
@@ -62,7 +64,8 @@ public class GradientDescentApplication {
 
         System.out.println("Spark says that the sum of " + dummydata + " is " + sum);
 
-        calculator = new SparkGradientDescentCalculator(sc, sc.parallelize(data), new LinearHypothesis());
+        //calculator = new SparkGradientDescentCalculator(sc, sc.parallelize(data), new LinearHypothesis());
+        calculator = new SparkGradientDescentCalculator(sc, DummyDataLoader.importCSV(sc, "test.csv"), new LinearHypothesis());
 
         System.out.println("Benchmarking Spark GradientDescent");
         avgTime = benchmark(calculator);
