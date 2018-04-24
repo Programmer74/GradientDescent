@@ -1,9 +1,6 @@
 package com.programmer74;
 
-import com.programmer74.GradientDescent.BasicGradientDescentCalculator;
-import com.programmer74.GradientDescent.GradientDescentCalculator;
-import com.programmer74.GradientDescent.SparkGradientDescentCalculator;
-import com.programmer74.GradientDescent.LinearHypothesis;
+import com.programmer74.GradientDescent.*;
 import com.programmer74.util.DummyDataLoader;
 import com.programmer74.util.Pair;
 
@@ -46,7 +43,13 @@ public class GradientDescentApplication {
         double avgTime = benchmark(calculator);
         System.out.println("Basic Gradient Descent required " + avgTime + "ms to calculate.");
 
-        System.out.println("Firing up Spark...");
+        calculator = new BigDecimalGradientDescentCalculator(data, new LinearHypothesis());
+
+        System.out.println("Benchmarking BigDecimal GradientDescent");
+        avgTime = benchmark(calculator);
+        System.out.println("BigDecimal Gradient Descent required " + avgTime + "ms to calculate.");
+
+        /*System.out.println("Firing up Spark...");
 
         Logger.getLogger("org").setLevel(Level.WARN);
         Logger.getLogger("akka").setLevel(Level.WARN);
@@ -66,6 +69,6 @@ public class GradientDescentApplication {
 
         System.out.println("Benchmarking Spark GradientDescent");
         avgTime = benchmark(calculator);
-        System.out.println("Spark Gradient Descent required " + avgTime + "ms to calculate.");
+        System.out.println("Spark Gradient Descent required " + avgTime + "ms to calculate.");*/
     }
 }
