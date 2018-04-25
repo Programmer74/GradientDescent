@@ -60,10 +60,7 @@ public class SparkGradientDescentCalculator implements GradientDescentCalculator
 
     protected double calculateGradientOfThetaNSpark(JavaSparkContext sc,  JavaRDD<Pair<Double>> pdata, Double theta0, Double theta1,
                                                       Hypothesis hypothesis, Integer pow) {
-        JavaRDD<Double> calcHypothesises = pdata.map(sample ->
-                (hypothesis.calculateHypothesis(sample.getFirst(), theta0, theta1) - sample.getSecond())
-                * Math.pow(sample.getFirst(), pow)
-        );
+        JavaRDD<Double> calcHypothesises = pdata.map(new SigmaCalculator(hypothesis, theta0, theta1, pow));
         return calcHypothesises.reduce((a, b) -> (a + b));
     }
 }
