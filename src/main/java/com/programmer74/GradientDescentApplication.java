@@ -54,8 +54,10 @@ public class GradientDescentApplication {
         Logger.getLogger("akka").setLevel(Level.WARN);
 
         SparkConf conf = new SparkConf().setAppName("GradientDescentApplication")
-                .setMaster("local[2]")
-                .set("spark.driver.host", "localhost");
+                .setJars(new String[]{"/home/hotaro/IdeaProjects/GradientDescent/target/GradientDescent-0.1-SNAPSHOT.jar"})
+                .setMaster("spark://192.168.1.111:7077")
+                .set("spark.executor.memory", "8g");
+                //.set("spark.driver.host", "localhost");
         JavaSparkContext sc = new JavaSparkContext(conf);
 
         List<Integer> dummydata = Arrays.asList(1, 2, 3, 4, 5);
@@ -65,7 +67,8 @@ public class GradientDescentApplication {
         System.out.println("Spark says that the sum of " + dummydata + " is " + sum);
 
         //calculator = new SparkGradientDescentCalculator(sc, sc.parallelize(data), new LinearHypothesis());
-        calculator = new SparkGradientDescentCalculator(sc, DummyDataLoader.importCSV(sc, "test.csv"), new LinearHypothesis());
+        JavaRDD<Pair<Double>> scdata = sc.parallelize(data);
+        calculator = new SparkGradientDescentCalculator(sc, scdata, new LinearHypothesis());
 
         System.out.println("Benchmarking Spark GradientDescent");
         avgTime = benchmark(calculator);

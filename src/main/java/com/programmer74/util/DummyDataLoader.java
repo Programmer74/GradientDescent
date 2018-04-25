@@ -57,8 +57,8 @@ public class DummyDataLoader {
         List<Pair<Double>> data = new ArrayList<>();
         for (String line : lines) {
             String[] fields = line.split(",");
-            Pair<Double> pair = new Pair<>(Double.valueOf(fields[0]), Double.valueOf(fields[1]));
-            data.add(pair);
+            Pair<Double> Pair = new Pair<>(Double.valueOf(fields[0]), Double.valueOf(fields[1]));
+            data.add(Pair);
         }
         return data;
     }
@@ -69,8 +69,8 @@ public class DummyDataLoader {
         JavaRDD<Pair<Double>> data = textData.map(
                 (Function<String, Pair<Double>>) line -> {
                     String[] fields = line.split(",");
-                    Pair<Double> pair = new Pair<>(Double.valueOf(fields[0]), Double.valueOf(fields[1]));
-                    return pair;
+                    Pair<Double> Pair = new Pair<>(Double.valueOf(fields[0]), Double.valueOf(fields[1]));
+                    return Pair;
                 });
         return data;
     }

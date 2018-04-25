@@ -40,10 +40,10 @@ public class Pair<T> implements Serializable {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        Pair<?> pair = (Pair<?>) o;
+        Pair<?> Pair = (Pair<?>) o;
 
-        if (first != null ? !first.equals(pair.first) : pair.first != null) return false;
-        return second != null ? second.equals(pair.second) : pair.second == null;
+        if (first != null ? !first.equals(Pair.first) : Pair.first != null) return false;
+        return second != null ? second.equals(Pair.second) : Pair.second == null;
     }
 
     @Override
