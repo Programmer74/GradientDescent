@@ -38,7 +38,10 @@ public class GradientDescentApplication {
     }
 
     public static void usage() {
-        System.out.println("Usage:\n$ java -jar GradientDescent.jar (--no-spark | <master url>) <csv filename>");
+        System.out.println("Usage:\n$ java -jar GradientDescent.jar (--no-spark | <master url>) <csv filename>\n" +
+                "    [--set-alpha <alpha>] [--set-epsilon <epsilon>] [--set-iterations <max iterations count>]\n" +
+                "    [--set-theta-0 <initial-theta-0>] [--set-theta-1 <initial-theta-1>]\n" +
+                "    [--set-worker-memory <worker memory>]");
     }
 
     public static void main(String[] args) {
@@ -47,7 +50,13 @@ public class GradientDescentApplication {
         boolean localMode = false;
         int localThreadCount = 0;
         String masterLocation = "";
-        String fileName = "";
+        String fileName;
+        double alpha = 0.01;
+        double epsilon = 0.0001;
+        int maxIterations = 10_000;
+        double initialTheta0 = 0.1;
+        double initialTheta1 = 0.1;
+        String workingMemory = "8g";
 
         if (args.length < 2) {
             usage();
@@ -76,6 +85,50 @@ public class GradientDescentApplication {
 
         fileName = args[1];
 
+        try {
+            for (int i = 2; i < args.length; i++) {
+                switch (args[i]) {
+                    case "--set-alpha":
+                        i++;
+                        alpha = Double.parseDouble(args[i]);
+                        System.out.println("Set alpha to " + alpha);
+                        break;
+                    case "--set-iterations":
+                        i++;
+                        maxIterations = Integer.parseInt(args[i]);
+                        System.out.println("Set Maximum iterations to " + maxIterations);
+                        break;
+                    case "--set-epsilon":
+                        i++;
+                        epsilon = Double.parseDouble(args[i]);
+                        System.out.println("Set epsilon to " + epsilon);
+                        break;
+                    case "--set-theta-0":
+                        i++;
+                        initialTheta0 = Double.parseDouble(args[i]);
+                        System.out.println("Set Initial Theta0 to " + initialTheta0);
+                        break;
+                    case "--set-theta-1":
+                        i++;
+                        initialTheta1 = Double.parseDouble(args[i]);
+                        System.out.println("Set Initial Theta1 to " + initialTheta1);
+                        break;
+                    case "--set-worker-memory":
+                        i++;
+                        workingMemory = args[i];
+                        System.out.println("Set worker memory to " + workingMemory);
+                        break;
+                    default:
+                        usage();
+                        return;
+                }
+            }
+        } catch (Exception ex) {
+            System.err.println("Incorrect arguments.");
+            usage();
+            System.exit(-2);
+        }
+
         GradientDescentCalculator calculator = null;
 
         if (withoutSpark) {
@@ -89,7 +142,7 @@ public class GradientDescentApplication {
             System.out.println("File import time: " + totalTime + " ms");
             System.out.println("Dataset size: " + data.size());
 
-            calculator = new BasicGradientDescentCalculator(data, new LinearHypothesis());
+            calculator = new BasicGradientDescentCalculator(data, new LinearHypothesis(), alpha, maxIterations, epsilon);
         } else {
             System.out.println("Configuring Spark...");
             Logger.getLogger("org").setLevel(Level.WARN);
@@ -111,6 +164,7 @@ public class GradientDescentApplication {
                 }
 
                 conf.setMaster(masterLocation);
+                conf.set("spark.executor.memory", workingMemory);
                 conf.setJars(new String[]{jarPath});
             }
 
@@ -126,12 +180,12 @@ public class GradientDescentApplication {
             System.out.println("File import time: " + totalTime + " ms");
             System.out.println("Dataset size: " + data.count());
 
-            calculator = new SparkGradientDescentCalculator(sc, data, new LinearHypothesis());
+            calculator = new SparkGradientDescentCalculator(sc, data, new LinearHypothesis(), alpha, maxIterations, epsilon);
         }
 
         long startTime = System.currentTimeMillis();
 
-        Pair<Double> finalTheta = calculator.calculate(0.1, 0.1);
+        Pair<Double> finalTheta = calculator.calculate(initialTheta0, initialTheta1);
 
         System.out.printf("theta0 = %f, theta1 = %f\n", finalTheta.getFirst(), finalTheta.getSecond());
         System.out.printf("y = %f * x + %f\n", finalTheta.getSecond(), finalTheta.getFirst());
