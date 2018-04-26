@@ -101,8 +101,17 @@ public class GradientDescentApplication {
                 conf.setMaster("local[" + localThreadCount + "]")
                     .set("spark.driver.host", "localhost");
             } else {
+
+                String jarPath = System.getenv("GDA_JAR_FILE");
+                if ((jarPath == null) || (jarPath.equals(""))) {
+                    System.err.println("GDA_JAR_FILE not set.");
+                    System.err.println("Please, run \"mvn package -DskipTests\" and \"export GDA_JAR_FILE=<file.java>\"");
+                    System.err.println("Otherwise, the Spark Cluster won't be able to (de)serialize our custom classes.");
+                    System.exit(-1);
+                }
+
                 conf.setMaster(masterLocation);
-                conf.setJars(new String[]{"/home/hotaro/IdeaProjects/GradientDescent/target/GradientDescent-0.1-SNAPSHOT.jar"});
+                conf.setJars(new String[]{jarPath});
             }
 
             JavaSparkContext sc = new JavaSparkContext(conf);
