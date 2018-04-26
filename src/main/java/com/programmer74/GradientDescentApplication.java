@@ -19,13 +19,12 @@ import org.apache.spark.SparkConf;
 public class GradientDescentApplication {
 
     private static final int triesCount = 3;
-    private static final int samplesCount = 100;
-    public static double benchmark(GradientDescentCalculator calculator) {
+    public static double benchmark(GradientDescentCalculator calculator, double initialTheta0, double initialTheta1 ) {
         double avgTime = 0;
         for (int i = 0; i < triesCount; i++) {
             long startTime = System.currentTimeMillis();
 
-            Pair<Double> finalTheta = calculator.calculate(0.1, 0.1);
+            Pair<Double> finalTheta = calculator.calculate(initialTheta0, initialTheta1);
             System.out.printf("theta0 = %f, theta1 = %f\n", finalTheta.getFirst(), finalTheta.getSecond());
 
             long endTime   = System.currentTimeMillis();
@@ -57,6 +56,7 @@ public class GradientDescentApplication {
         double initialTheta0 = 0.1;
         double initialTheta1 = 0.1;
         String workingMemory = "8g";
+        boolean benchmarkMode = false;
 
         if (args.length < 2) {
             usage();
@@ -117,6 +117,10 @@ public class GradientDescentApplication {
                         i++;
                         workingMemory = args[i];
                         System.out.println("Set worker memory to " + workingMemory);
+                        break;
+                    case "--benchmark":
+                        benchmarkMode = true;
+                        System.out.println("Benchmark Mode enabled");
                         break;
                     default:
                         usage();
@@ -193,5 +197,9 @@ public class GradientDescentApplication {
         long totalTime = endTime - startTime;
         System.out.println("Took " + totalTime + " ms to calculate.");
 
+        if (benchmarkMode) {
+            System.out.println("Doing additional benchmarking...");
+            benchmark(calculator, initialTheta0, initialTheta1);
+        }
     }
 }
