@@ -199,7 +199,10 @@ public class GradientDescentApplication {
 
         if (benchmarkMode) {
             System.out.println("Doing additional benchmarking...");
-            benchmark(calculator, initialTheta0, initialTheta1);
+            System.out.println("Average: " + benchmark(calculator, initialTheta0, initialTheta1));
+            System.out.println("Compared to single basic method...");
+            calculator = new BasicGradientDescentCalculator(DummyDataLoader.importCSV(fileName), new LinearHypothesis(), alpha, maxIterations, epsilon);
+            System.out.println("Average: " + benchmark(calculator, initialTheta0, initialTheta1));
         }
     }
 }
