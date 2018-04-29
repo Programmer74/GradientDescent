@@ -40,9 +40,15 @@ public class BasicGradientDescentCalculator implements GradientDescentCalculator
         double theta0 = initialTheta0, theta1 = initialTheta1;
         double oldTheta0 = 0, oldTheta1 = 0;
 
+        long startTime = 0;
+
         for (int i = 0 ; i < maxIterations; i++) {
             if (hasConverged(oldTheta0, theta0) && hasConverged(oldTheta1, theta1)) {
                 break;
+            }
+
+            if (i == 20) {
+                startTime = System.currentTimeMillis();
             }
 
             oldTheta0 = theta0;
@@ -53,6 +59,14 @@ public class BasicGradientDescentCalculator implements GradientDescentCalculator
 
             theta0 = theta0 - (alpha * (1.0 / data.size()) * sum0);
             theta1 = theta1 - (alpha * (1.0 / data.size()) * sum1);
+
+            if (i == 20) {
+                long endTime  = System.currentTimeMillis();
+                long totalTime = endTime - startTime;
+                System.out.println("Single iteration was for " + totalTime + " ms");
+                System.out.println("sums: " + sum0 + " " + sum1);
+                System.out.println("thetas: " + theta0 + " " + theta1);
+            }
         }
         return new Pair<>(theta0, theta1);
     }

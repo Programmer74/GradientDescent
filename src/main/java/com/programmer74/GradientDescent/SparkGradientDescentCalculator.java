@@ -41,8 +41,16 @@ public class SparkGradientDescentCalculator implements GradientDescentCalculator
         double theta0 = initialTheta0, theta1 = initialTheta1;
         double oldTheta0 = 0, oldTheta1 = 0;
 
+        long startTime = 0;
+
         for (int i = 0 ; i < maxIterations; i++) {
+
+            if (i == 20) {
+                startTime = System.currentTimeMillis();
+            }
+
             if (hasConverged(oldTheta0, theta0) && hasConverged(oldTheta1, theta1)) {
+                System.out.println("Converged at iteration " + (i + 1));
                 break;
             }
 
@@ -54,6 +62,12 @@ public class SparkGradientDescentCalculator implements GradientDescentCalculator
 
             theta0 = theta0 - (alpha * (1.0 / pdata.count()) * sum0);
             theta1 = theta1 - (alpha * (1.0 / pdata.count()) * sum1);
+
+            if (i == 20) {
+                long endTime  = System.currentTimeMillis();
+                long totalTime = endTime - startTime;
+                System.out.println("Single iteration was for " + totalTime + " ms");
+            }
         }
         return new Pair<>(theta0, theta1);
     }
