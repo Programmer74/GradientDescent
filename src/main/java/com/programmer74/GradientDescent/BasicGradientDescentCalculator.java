@@ -22,7 +22,8 @@ public class BasicGradientDescentCalculator implements GradientDescentCalculator
         this.hypothesis = hypothesis;
     }
 
-    public BasicGradientDescentCalculator(List<Pair<Double>> data, Hypothesis hypothesis, double alpha, int maxIterations, double epsilon) {
+    public BasicGradientDescentCalculator(List<Pair<Double>> data, Hypothesis hypothesis, double alpha,
+                                          int maxIterations, double epsilon) {
         this.data = data;
         this.alpha = alpha;
         this.epsilon = epsilon;
@@ -57,14 +58,14 @@ public class BasicGradientDescentCalculator implements GradientDescentCalculator
         return new Pair<>(theta0, theta1);
     }
 
-    protected static double calculateGradientOfThetaN(List<Pair<Double>> data, double theta0, double theta1,
-                                                      Hypothesis hypothesis, DoubleUnaryOperator factor) {
+    private static double calculateGradientOfThetaN(List<Pair<Double>> data, double theta0, double theta1,
+                                                    Hypothesis hypothesis, DoubleUnaryOperator factor) {
         return calculateSigma(data, (x, y) ->  (
                 hypothesis.calculateHypothesis(x, theta0, theta1) - y) * factor.applyAsDouble(x)
         );
     }
 
-    protected static double calculateSigma(List<Pair<Double>> data, DoubleBinaryOperator inner) {
+    private static double calculateSigma(List<Pair<Double>> data, DoubleBinaryOperator inner) {
         return data.stream()
                 .mapToDouble(theta -> {
                     double x = theta.getFirst(), y = theta.getSecond();

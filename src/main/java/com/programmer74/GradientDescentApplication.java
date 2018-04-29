@@ -184,7 +184,8 @@ public class GradientDescentApplication {
             System.out.println("File import time: " + totalTime + " ms");
             System.out.println("Dataset size: " + data.count());
 
-            calculator = new SparkGradientDescentCalculator(sc, data, new LinearHypothesis(), alpha, maxIterations, epsilon);
+            calculator = new SparkGradientDescentCalculator(sc, data, new LinearHypothesis(), alpha, maxIterations,
+                    epsilon);
         }
 
         long startTime = System.currentTimeMillis();
@@ -201,7 +202,8 @@ public class GradientDescentApplication {
             System.out.println("Doing additional benchmarking...");
             System.out.println("Average: " + benchmark(calculator, initialTheta0, initialTheta1));
             System.out.println("Compared to single basic method...");
-            calculator = new BasicGradientDescentCalculator(DummyDataLoader.importCSV(fileName), new LinearHypothesis(), alpha, maxIterations, epsilon);
+            calculator = new BasicGradientDescentCalculator(DummyDataLoader.importCSV(fileName), new LinearHypothesis(),
+                    alpha, maxIterations, epsilon);
             System.out.println("Average: " + benchmark(calculator, initialTheta0, initialTheta1));
         }
     }

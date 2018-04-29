@@ -22,7 +22,8 @@ public class SparkGradientDescentCalculator implements GradientDescentCalculator
         this.hypothesis = hypothesis;
     }
 
-    public SparkGradientDescentCalculator(JavaSparkContext sc, JavaRDD<Pair<Double>> pdata, Hypothesis hypothesis, double alpha, int maxIterations, double epsilon) {
+    public SparkGradientDescentCalculator(JavaSparkContext sc, JavaRDD<Pair<Double>> pdata, Hypothesis hypothesis,
+                                          double alpha, int maxIterations, double epsilon) {
         this.sc = sc;
         this.pdata = pdata;
         this.alpha = alpha;
@@ -58,8 +59,8 @@ public class SparkGradientDescentCalculator implements GradientDescentCalculator
         return new Pair<>(theta0, theta1);
     }
 
-    protected double calculateGradientOfThetaNSpark(JavaSparkContext sc,  JavaRDD<Pair<Double>> pdata, Double theta0, Double theta1,
-                                                      Hypothesis hypothesis, Integer pow) {
+    private double calculateGradientOfThetaNSpark(JavaSparkContext sc, JavaRDD<Pair<Double>> pdata, Double theta0,
+                                                  Double theta1, Hypothesis hypothesis, Integer pow) {
         JavaRDD<Double> calcHypothesises = pdata.map(new SigmaCalculator(hypothesis, theta0, theta1, pow));
         return calcHypothesises.reduce((a, b) -> (a + b));
     }

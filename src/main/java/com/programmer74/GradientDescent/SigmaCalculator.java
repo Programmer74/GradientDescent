@@ -9,7 +9,7 @@ public class SigmaCalculator implements Function<Pair<Double>, Double>, Serializ
     private Hypothesis hypothesis;
     private double theta0, theta1;
     private int pow;
-    public SigmaCalculator(Hypothesis hypothesis, double theta0, double theta1, int pow) {
+    SigmaCalculator(Hypothesis hypothesis, double theta0, double theta1, int pow) {
         this.theta0 = theta0;
         this.theta1 = theta1;
         this.hypothesis = hypothesis;
